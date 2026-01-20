@@ -50,7 +50,7 @@ contract SecureSignatureContract {
      * @dev Alternative secure implementation using OpenZeppelin's ECDSA library
      * This is the recommended approach as it handles all edge cases automatically
      */
-    function authorizeUserWithECDSA(
+    function authorizeUserWithEcdsa(
         bytes memory signature,
         bytes32 hash,
         address user
@@ -98,9 +98,8 @@ contract SecureSignatureContract {
     
     /**
      * @dev Function that requires authorization
-     * @param data Some data to process
      */
-    function processData(string memory data) external view returns (bool) {
+    function checkAuthorization() external view returns (bool) {
         require(authorizedUsers[msg.sender], "Not authorized");
         return true;
     }
@@ -144,6 +143,12 @@ contract SecureSignatureContract {
         address user, 
         uint256 nonce
     ) external pure returns (bytes32) {
-        return keccak256(abi.encodePacked(user, nonce));
+         bytes32 hashedVal;
+         assembly {
+            mstore(0x00, user)
+            mstore(0x20, nonce)
+            hashedVal := keccak256(0x00, 0x20)
+        }
+        return hashedVal;
     }
 } 

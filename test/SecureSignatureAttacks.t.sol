@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.30;
 
-import "forge-std/Test.sol";
-import "../src/SecureSignatureContract.sol";
+import {Test} from "forge-std/Test.sol";
+import {SecureSignatureContract} from "../src/SecureSignatureContract.sol";
 
 contract SecureSignatureAttacksTest is Test {
     SecureSignatureContract public secureContract;
@@ -92,7 +92,7 @@ contract SecureSignatureAttacksTest is Test {
     function testProcessDataRequiresAuthorization() public {
         // Try to process data without authorization
         vm.expectRevert("Not authorized");
-        secureContract.processData("test data");
+        secureContract.checkAuthorization();
         
         // Authorize the caller
         bytes32 hash = secureContract.createAuthorizationHash(address(this), 1);
@@ -100,6 +100,6 @@ contract SecureSignatureAttacksTest is Test {
         secureContract.authorizeUser(v, r, s, hash, address(this));
         
         // Now should be able to process data
-        assertTrue(secureContract.processData("test data"));
+        assertTrue(secureContract.checkAuthorization());
     }
 } 

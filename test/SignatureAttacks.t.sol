@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.30;
 
-import "forge-std/Test.sol";
-import "../src/SignatureAttacks.sol";
+import {Test} from "forge-std/Test.sol";
+import {VulnerableSignatureContract} from "../src/SignatureAttacks.sol";
 
 contract SignatureAttacksTest is Test {
     VulnerableSignatureContract public vulnerableContract;

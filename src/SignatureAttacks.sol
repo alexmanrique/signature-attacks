@@ -97,6 +97,13 @@ contract VulnerableSignatureContract {
         address user, 
         uint256 nonce
     ) external pure returns (bytes32) {
-        return keccak256(abi.encodePacked(user, nonce));
+         bytes32 hashedVal;
+         assembly {
+            mstore(0x00, user)
+            mstore(0x20, nonce)
+            hashedVal := keccak256(0x00, 0x20)
+        }
+        return hashedVal;
+        //return keccak256(abi.encodePacked(user, nonce));
     }
 }
