@@ -1,66 +1,25 @@
-## Foundry
+## Signature Attacks
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Exercise to study signature attacks in Solidity contracts. It includes a
+vulnerable version and a secure version, plus Foundry tests that show the
+expected behavior.
 
-Foundry consists of:
+## Contracts
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- `SignatureAttacks.sol` → `VulnerableSignatureContract`
+  - Uses `ecrecover` without validating the result.
+  - Allows invalid signatures (that return `address(0)`) to authorize users.
+  - Includes basic replay protection with `usedHashes`.
+- `SecureSignatureContract.sol` → `SecureSignatureContract`
+  - Validates that `ecrecover` does not return `address(0)`.
+  - Includes an alternative version with `v` and `s` validation (anti-malleability).
+  - Keeps replay protection with `usedHashes`.
 
-## Documentation
+## Tests
 
-https://book.getfoundry.sh/
+- `test/SignatureAttacks.t.sol`
+  - Shows that the vulnerable version accepts invalid or malformed signatures.
+- `test/SecureSignatureAttacks.t.sol`
+  - Verifies the secure version reverts on invalid signatures and prevents replay.
 
-## Usage
 
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
